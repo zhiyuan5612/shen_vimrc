@@ -50,12 +50,6 @@ let g:ctrlp_custom_ignore = 'node_modules\|^\.DS_Store\|^\.git\|^\.coffee'
 let g:user_zen_mode='a'
 
 
-""""""""""""""""""""""""""""""
-" => snipMate (beside <TAB> support <CTRL-j>)
-""""""""""""""""""""""""""""""
-ino <c-j> <c-r>=snipMate#TriggerSnippet()<cr>
-snor <c-j> <esc>i<right><c-r>=snipMate#TriggerSnippet()<cr>
-
 
 """"""""""""""""""""""""""""""
 " => Vim grep
@@ -79,7 +73,11 @@ map <leader>nf :NERDTreeFind<cr>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => vim-multiple-cursors
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:multi_cursor_next_key="\<C-s>"
+let g:multi_cursor_use_default_mapping=0
+let g:multi_cursor_next_key='<C-n>'
+let g:multi_cursor_prev_key='<C-p>'
+let g:multi_cursor_skip_key='<C-x>'
+let g:multi_cursor_quit_key='<Esc>'
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -162,15 +160,33 @@ nnoremap <silent> <leader>c :call SyntasticCheckCoffeescript()<cr>
 let g:gitgutter_enabled=0
 nnoremap <silent> <leader>d :GitGutterToggle<cr>
 
+
+
+
+    " Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
+ let g:UltiSnipsExpandTrigger="<c-j>"
+ let g:UltiSnipsJumpForwardTrigger="<c-b>"
+ let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+
+ " If you want :UltiSnipsEdit to split your window.
+let g:UltiSnipsEditSplit="vertical"
+
+
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => YouCompleteMe  代码自动补全
 " """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
 " youcompleteme  默认tab  s-tab 和自动补全冲突
 " let g:ycm_key_list_select_completion=['<c-n>']
 " let g:ycm_key_list_select_completion = ['<Down>']
 " let g:ycm_key_list_previous_completion=['<c-p>']
 " let g:ycm_key_list_previous_completion = ['<Up>']
-let g:ycm_confirm_extra_conf=0      " 关闭加载.ycm_extra_conf.py提示
+
+let g:ycm_autoclose_preview_window_after_completion = 1
+let g:ycm_autoclose_preview_window_after_completion = 1
+
+let g:ycm_confirm_extra_conf=1      " 关闭加载.ycm_extra_conf.py提示
 let g:ycm_complete_in_comments = 1  "在注释输入中也能补全
 let g:ycm_complete_in_strings = 1   "在字符串输入中也能补全
 let g:ycm_collect_identifiers_from_tags_files=1                 " 开启 YCM
@@ -180,17 +196,12 @@ let g:ycm_collect_identifiers_from_comments_and_strings = 1
 let g:ycm_seed_identifiers_with_syntax=1   "语言关键字补全,
 "不过python关键字都很短，所以，需要的自己打开
 let g:ycm_collect_identifiers_from_tags_files = 1
-let g:ycm_min_num_of_chars_for_completion=2                     "
+let g:ycm_min_num_of_chars_for_completion=1                     "
 "从第2个键入字符就开始罗列匹配项
 " 引入，可以补全系统，以及python的第三方包 针对新老版本YCM做了兼容
-" old version
-if !empty(glob("~/.vim/bundle/YouCompleteMe/cpp/ycm/.ycm_extra_conf.py"))
-	let g:ycm_global_ycm_extra_conf =
-	"~/.vim/bundle/YouCompleteMe/cpp/ycm/.ycm_extra_conf.py"
-endif
 " new version
-if !empty(glob("~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py"))
-	let g:ycm_global_ycm_extra_conf ="~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py"
+if !empty(glob('ycm_extra_conf.py'))
+	let g:ycm_global_ycm_extra_conf ='ycm_extra_conf.py'
 endif
 
 "mapping
@@ -198,6 +209,7 @@ nmap <leader>gd :YcmDiags<CR>
 nnoremap <leader>gl :YcmCompleter GoToDeclaration<CR>           "跳转到申明处
 nnoremap <leader>gf :YcmCompleter GoToDefinition<CR>            "跳转到定义处
 nnoremap <leader>gg :YcmCompleter GoToDefinitionElseDeclaration<CR>
+inoremap <expr> <CR>       pumvisible() ? "\<C-y>" : "\<CR>"    "回车即选中当前项"
 
 " 直接触发自动补全
 let g:ycm_key_invoke_completion = '<C-Space>'
@@ -206,3 +218,6 @@ let g:ycm_filetype_blacklist = {
 			\ 'tagbar' : 1,
 			\ 'gitcommit' : 1,
 			\}
+let g:syntastic_cpp_compiler = 'g++'  "change the compiler to g++ to support c++11. 
+let g:syntastic_cpp_compiler_options = '-std=c++11 -stdlib=libc++' "set the options of g++ to suport c++11.
+
